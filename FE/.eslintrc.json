@@ -9,7 +9,7 @@
     }
   },
   "env": {
-    "es6": true,
+    "es5": true,
     "browser": true,
     "node": true
   }

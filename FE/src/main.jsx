@@ -1,18 +1,47 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
-import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+const Join = React.lazy(() => import("./Join"));
+const Chat = React.lazy(() => import("./Chat"));
 
 const App = () => {
-  const [count, setCount] = useState(0);
-
+  console.log("Loaded APP");
   return (
-    <div className="App">
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={
+            <React.Suspense
+              fallback={
+                <div>
+                  <h1>LOADING....</h1>
+                </div>
+              }
+            >
+              <Join />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/chat"
+          exact
+          element={
+            <React.Suspense
+              fallback={
+                <div>
+                  <h1>LOADING....</h1>
+                </div>
+              }
+            >
+              <Chat />
+            </React.Suspense>
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 
