@@ -36,7 +36,7 @@ const App = () => {
                 </div>
               }
             >
-              <Chat />
+              <Chat location={location} />
             </React.Suspense>
           }
         />
