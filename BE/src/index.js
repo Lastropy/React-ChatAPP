@@ -1,7 +1,7 @@
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
-const router = require("./router");
+const router = require("../router");
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 
@@ -28,9 +28,10 @@ io.on("connection", (socket) => {
     try {
       console.log(name, room);
     } catch (error) {
-      func({ error: error.message });
+      console.error(error.message);
     }
   });
+
   socket.on("disconnect", (reason) => {
     console.log("disconnected");
     console.log(reason);
