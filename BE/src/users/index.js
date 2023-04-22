@@ -10,10 +10,12 @@ const addUser = ({ id, name, room }) => {
     (user) => user.name === name && user.room === room
   );
 
-  if (existingUser) return { error: "username is taken." };
+  if (existingUser) return { error: `Username ${name} is taken.` };
 
   const user = { id, name, room };
   users.push(user);
+
+  return { user };
 };
 
 const removeUser = (id) => {
