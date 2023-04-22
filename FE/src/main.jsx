@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LoadingAnimation from "./components/LoadingAnimation";
 
 const Join = React.lazy(() => import("./Join"));
 const Chat = React.lazy(() => import("./Chat"));
@@ -14,13 +15,7 @@ const App = () => {
           path="/"
           exact
           element={
-            <React.Suspense
-              fallback={
-                <div>
-                  <h1>LOADING....</h1>
-                </div>
-              }
-            >
+            <React.Suspense fallback={<LoadingAnimation />}>
               <Join />
             </React.Suspense>
           }
@@ -29,13 +24,7 @@ const App = () => {
           path="/chat"
           exact
           element={
-            <React.Suspense
-              fallback={
-                <div>
-                  <h1>LOADING....</h1>
-                </div>
-              }
-            >
+            <React.Suspense fallback={<LoadingAnimation />}>
               <Chat location={location} />
             </React.Suspense>
           }
