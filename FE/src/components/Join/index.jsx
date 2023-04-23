@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../assets/css/Join.css";
+import "../../assets/css/Join.css";
 
 const Join = () => {
   const [name, setName] = useState("");
