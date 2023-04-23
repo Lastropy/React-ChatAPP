@@ -15,12 +15,12 @@ const app = express();
 const server = http.createServer(app);
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://mellow-pegasus-975cf9.netlify.app",
   })
 );
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://mellow-pegasus-975cf9.netlify.app",
   },
 });
 
