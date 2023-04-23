@@ -26,9 +26,7 @@ const io = socketio(server, {
 
 app.use(router);
 
-server.listen(port, () =>
-  console.log(`Server running on ${port}`)
-);
+server.listen(port);
 
 io.on("connection", (socket) => {
   socket.on(
@@ -85,7 +83,5 @@ io.on("connection", (socket) => {
         user: "admin",
         text: `${user.name} has left the room ${user.room}`,
       });
-    console.log("disconnected");
-    console.log(reason);
   });
 });

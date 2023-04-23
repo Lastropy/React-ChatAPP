@@ -1,13 +1,16 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
 import LoadingAnimation from "./components/LoadingAnimation";
 
 const Join = React.lazy(() => import("./components/Join"));
 const Chat = React.lazy(() => import("./components/Chat"));
 
 const App = () => {
-  console.log("Loaded APP");
   return (
     <Router>
       <Routes>

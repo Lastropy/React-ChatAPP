@@ -56,8 +56,6 @@ const Chat = ({ location }) => {
     }
   };
 
-  console.log("MESSAGE", message);
-  console.log("MESSAGES", messages);
   return (
     <div className="outerContainer">
       <div className="container">
