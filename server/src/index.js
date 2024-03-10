@@ -15,12 +15,12 @@ const app = express();
 const server = http.createServer(app);
 app.use(
   cors({
-    origin: "https://aesthetic-tulumba-70abc0.netlify.app",
+    origin: "*",
   })
 );
 const io = socketio(server, {
   cors: {
-    origin: "https://aesthetic-tulumba-70abc0.netlify.app",
+    origin: "*",
   },
 });
 

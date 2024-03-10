@@ -1,4 +1,3 @@
-const ENDPOINT =
-  "https://react-chat-app-backend-0m1r.onrender.com/";
+const ENDPOINT = "http://localhost:5000";
 
 export { ENDPOINT };
