@@ -33,9 +33,9 @@ c) The backend server will run on port 5000.
 
 > URL : http://localhost:5000
 
-d) The frontend server will run on port 5137.
+d) The frontend server will run on port 5173.
 
-> URL : http://localhost:5137
+> URL : http://localhost:5173
 
 ## Activities
 
