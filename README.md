@@ -17,6 +17,7 @@ a) _Support for in-text emojis_.
 > Type _:) and get😀_
 
 b) _Lazy Loading Implemented, for optimized rendering of component trees._
+
 c) _Loader Animation implemented._
 
 ## How To Start
