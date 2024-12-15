@@ -57,3 +57,5 @@ g) The message you send in the room, will be visible to all participants of that
 h) Upon exiting the room, the other room users will be notified.
 
 i) Upon exiting the room, you'll be taken back to username and room login page.
+
+![1734263457270](image/README/1734263457270.png)
