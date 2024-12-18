@@ -4,48 +4,39 @@ import io from "socket.io-client";
 import InfoBar from "../components/InfoBar";
 import Input from "../components/Input";
 import Messages from "./Messages";
+import { useAuth0 } from "@auth0/auth0-react";
 let socket;
 
-// ✅ location is a prop coming from react router
-// ✅ we are passing data in one component to other component using query string
-// ✅ location.search -> gives our data
 const Chat = ({ location }) => {
-	const [name, setName] = useState("");
-	const [room, setRoom] = useState("");
+	const { user, isAuthenticated } = useAuth0();
+	const { roomName, roomPwd } = queryString.parse(location.search);
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState("");
 
 	useEffect(() => {
-		const { name, room } = queryString.parse(location.search);
-		setName(name);
-		setRoom(room);
-		socket = io(import.meta.env.VITE_SERVER_ENDPOINT);
-		socket.emit("join", { name, room }, (error) => {
-			if (error) {
-				alert(error);
-				window.history.back();
-			}
-		});
+		if (isAuthenticated) {
+			socket = io(import.meta.env.VITE_SERVER_ENDPOINT);
+			const { name } = user;
+			// Verify before joining
+			socket.emit("join", { name, roomName, roomPwd }, (error) => {
+				if (error) {
+					alert(error);
+					window.history.back();
+				}
+			});
 
-		// 🤔 Will execute on component unmount
-		return () => {
-			socket.disconnect();
-			socket.off();
-		};
-	}, [location.search]);
+			socket.on("message", (message) => {
+				setMessages(messages.concat(message));
+			});
 
-	useEffect(() => {
-		socket.on("message", (message) => {
-			setMessages(messages.concat(message));
-		});
-	}, [messages]);
+			return () => {
+				socket.disconnect();
+				socket.off();
+			};
+		}
+	}, [location.search, isAuthenticated]);
 
-	const sendMessage = (event) => {
-		/* 🤔 
-    Prevents rerender of whole page, as that's the default behaviour
-    in React 
-    */
-		console.log("SENDING!!");
+	const handleSend = (event) => {
 		event.preventDefault();
 		if (message) {
 			socket.emit("sendMessage", message, () => {
@@ -56,11 +47,11 @@ const Chat = ({ location }) => {
 
 	return (
 		<div className="outerContainer">
-			{name && room ? (
+			{roomName && roomPwd && user ? (
 				<div className="container">
-					<InfoBar roomName={room} />
-					<Messages messages={messages} name={name} />
-					<Input message={message} sendMessage={sendMessage} setMessage={setMessage} />
+					<InfoBar roomName={roomName} />
+					<Messages messages={messages} name={user?.name ?? ""} />
+					<Input message={message} handleSend={handleSend} setMessage={setMessage} />
 				</div>
 			) : (
 				<div style={{ color: "white" }}>No Name / Room provided</div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ message, setMessage, sendMessage }) => {
+const Input = ({ message, setMessage, handleSend }) => {
 	return (
 		<form className="form">
 			<input
@@ -9,9 +9,9 @@ const Input = ({ message, setMessage, sendMessage }) => {
 				value={message}
 				placeholder="Type a message..."
 				onChange={(event) => setMessage(event.target.value)}
-				onKeyDown={(event) => (event.key === "Enter" ? sendMessage(event) : null)}
+				onKeyDown={(event) => (event.key === "Enter" ? handleSend(event) : null)}
 			/>
-			<button className="sendButton" onClick={(event) => sendMessage(event)}>
+			<button className="sendButton" onClick={(event) => handleSend(event)}>
 				Send
 			</button>
 		</form>
