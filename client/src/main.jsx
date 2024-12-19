@@ -7,12 +7,12 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
 	<Auth0Provider
-		domain="dev-bi0d2wq8tzdpbefk.us.auth0.com"
-		clientId="RXKn0vG3c9aq5ximPwCyTwP11wHy6ViX"
+		domain={import.meta.env.VITE_AUTH0_DOMAIN}
+		clientId={import.meta.env.VITE_CLIENT_ID}
 		authorizationParams={{
-			redirect_uri: "http://localhost:5173/room",
-			audience: "http://localhost:5000",
-			scope: "read:users read:rooms read:messages create:users create:rooms create:messages profile email",
+			redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+			audience: import.meta.env.VITE_SERVER_ENDPOINT,
+			scope: import.meta.env.VITE_AUTH_SCOPE,
 		}}
 		useRefreshTokens={true}
 	>
