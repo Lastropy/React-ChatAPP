@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoadingAnimation from "./components/LoadingAnimation";
 import "./assets/css/index.css";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const JoinOrCreateRoom = React.lazy(() => import("./views/JoinOrCreateRoom"));
 const Chat = React.lazy(() => import("./views/Chat"));
@@ -28,7 +29,7 @@ export const App = () => {
 					exact
 					element={
 						<React.Suspense fallback={<LoadingAnimation />}>
-							<JoinOrCreateRoom />
+							<ProtectedRoute component={JoinOrCreateRoom} />
 						</React.Suspense>
 					}
 				/>
@@ -37,7 +38,7 @@ export const App = () => {
 					exact
 					element={
 						<React.Suspense fallback={<LoadingAnimation />}>
-							<Chat location={location} />
+							<ProtectedRoute component={Chat} location={location} />
 						</React.Suspense>
 					}
 				/>
