@@ -1,10 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	CreateDateColumn,
+	OneToMany,
+	ManyToMany,
+	JoinTable,
+	Unique,
+} from "typeorm";
 import { Message } from "./message";
 import { Room } from "./room";
 
 @Entity()
+@Unique(["email"])
 export class User {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id!: string;
 
 	@Column({
