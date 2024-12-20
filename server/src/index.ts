@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { handleDisconnection, newUserJoins, sendNewMessage } from "./api/users";
+import api from "./api";
 import cors from "cors";
 import express, { Request, Response, Router } from "express";
 import { createServer } from "http";
@@ -32,10 +32,10 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket: Socket) => {
-	console.log("CONNECTED!");
-	socket.on("join", (data, callback) => newUserJoins(data, socket, io, callback));
-	socket.on("sendMessage", (data, callback) => sendNewMessage(data, socket, io, callback));
-	socket.on("disconnect", (reason) => handleDisconnection(reason, socket, io));
+	socket.on("createIfNotExists:user", async (data, callback) => await api.users.newUserJoins(data, callback));
+	socket.on("create:room", async (data, callback) => await api.rooms.createANewRoom(data, callback));
+	// socket.on("sendMessage", (data, callback) => sendNewMessage(data, socket, io, callback));
+	// socket.on("disconnect", (reason) => handleDisconnection(reason, socket, io));
 });
 
 AppDataSource.initialize()

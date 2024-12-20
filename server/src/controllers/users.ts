@@ -1,43 +1,35 @@
-// 🌙 Will serve as our "data structure" to
-// 🌙 store all current users
-export interface User {
-	id: string;
+import BasicRepositoryOperations from "../helpers/BasicRepositoryOperations";
+interface UsersControllerRequest {
 	name: string;
-	room: string;
+	email: string;
 }
 
-interface UserControllersResponse extends User {
-	error?: string | undefined;
-}
-
-const users: User[] = [];
-
-export const addUser = ({ id, name, room }: User): UserControllersResponse => {
-	name = name.trim().toLowerCase();
-	room = room.trim().toLowerCase();
-
-	const existingUser = users.find((user) => user.name === name && user.room === room);
-
-	if (existingUser) return { id: "", name: "", room: "", error: `Username ${name} is taken.` };
-
-	const user: User = { id, name, room };
-	users.push(user);
-
-	return user;
+export const createIfNotExists = async ({ name, email }: UsersControllerRequest) => {
+	try {
+		console.log("Inside createIfNotExists");
+		let user = await findUser({ name, email });
+		if (!user) {
+			user = await BasicRepositoryOperations.create("User", {
+				name,
+				email,
+			});
+		}
+		return Promise.resolve(user);
+	} catch (error) {
+		console.error("Error in upsertUser");
+		return Promise.reject(error);
+	}
 };
 
-export const removeUser = (id: User["id"]): UserControllersResponse => {
-	const index = users.findIndex((user) => user.id === id);
-	if (index === -1) return { id: "", name: "", room: "", error: `User with id ${id} cannot be removed.` };
-	return users.splice(index, 1)[0];
-};
-
-export const getUser = (id: User["id"]): UserControllersResponse => {
-	const user = users.find((user) => user.id === id);
-	if (!user) return { id: "", name: "", room: "", error: `User with id ${id} not found.` };
-	return user;
-};
-
-export const getUsersInRoom = (room: User["room"]): User[] => {
-	return users.filter((user) => user.room === room);
+export const findUser = async ({ name, email }: UsersControllerRequest) => {
+	try {
+		let user = await BasicRepositoryOperations.find("User", {
+			name,
+			email,
+		});
+		return Promise.resolve(user);
+	} catch (error) {
+		console.error("Error in findUser");
+		return Promise.reject(error);
+	}
 };
