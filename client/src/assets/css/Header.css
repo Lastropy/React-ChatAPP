@@ -1,0 +1,40 @@
+.user-profile-image {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	background-color: brown;
+	color: #ffffff;
+	font-size: 20px;
+	border-radius: 50%;
+	font-weight: 600;
+}
+
+.header-style {
+	background-color: #1a1a1d;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	display: flex;
+	position: relative;
+	border-bottom: 2px solid white;
+}
+
+.content-style {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+}
+
+.header-profile-image {
+	width: 30px;
+	height: 30px;
+	border: 2px solid white;
+}
+
+.header-user-info {
+	font-size: 16px;
+	font-weight: bold;
+}
