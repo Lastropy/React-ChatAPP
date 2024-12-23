@@ -16,11 +16,22 @@ class BasicRepositoryOperations {
 	async find(entityName: string, data: Object) {
 		try {
 			const repository = AppDataSource.getRepository(entityName);
-			const existingRecord = await repository.findOneBy(data);
+			const existingRecord = await repository.find(data);
+			return Promise.resolve(existingRecord);
+		} catch (error) {
+			console.error("Error in BasicRepositoryOperations find");
+			return Promise.reject(error);
+		}
+	}
+
+	async findOne(entityName: string, data: Object) {
+		try {
+			const repository = AppDataSource.getRepository(entityName);
+			const existingRecord = await repository.findOne({ where: data });
 			console.log(existingRecord);
 			return Promise.resolve(existingRecord);
 		} catch (error) {
-			console.error("Error in BasicRepositoryOperations create");
+			console.error("Error in BasicRepositoryOperations findOne");
 			return Promise.reject(error);
 		}
 	}
