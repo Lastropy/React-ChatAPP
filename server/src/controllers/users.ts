@@ -23,7 +23,7 @@ export const createIfNotExists = async ({ name, email }: UsersControllerRequest)
 
 export const findUser = async ({ name, email }: UsersControllerRequest) => {
 	try {
-		let user = await BasicRepositoryOperations.find("User", {
+		let user = await BasicRepositoryOperations.findOne("User", {
 			name,
 			email,
 		});
