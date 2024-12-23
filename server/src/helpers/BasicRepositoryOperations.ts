@@ -5,7 +5,6 @@ class BasicRepositoryOperations {
 		try {
 			const repository = AppDataSource.getRepository(entityName);
 			const newRecord = await repository.save(data);
-			console.log(newRecord);
 			return Promise.resolve(newRecord);
 		} catch (error) {
 			console.error("Error in BasicRepositoryOperations create");
@@ -28,7 +27,6 @@ class BasicRepositoryOperations {
 		try {
 			const repository = AppDataSource.getRepository(entityName);
 			const existingRecord = await repository.findOne({ where: data });
-			console.log(existingRecord);
 			return Promise.resolve(existingRecord);
 		} catch (error) {
 			console.error("Error in BasicRepositoryOperations findOne");

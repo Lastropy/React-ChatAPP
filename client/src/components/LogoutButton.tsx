@@ -2,17 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const LogoutButton = () => {
-	const { logout, isAuthenticated, getAccessTokenSilently } = useAuth0();
-	useEffect(() => {
-		console.log("isAuth2", isAuthenticated);
-		if (isAuthenticated) {
-			const getToken = async () => {
-				const accessToken = await getAccessTokenSilently();
-				console.log("auth token", accessToken);
-			};
-			getToken();
-		}
-	}, [isAuthenticated]);
+	const { logout } = useAuth0();
 
 	return (
 		<button className="logout-button" onClick={() => logout()}>

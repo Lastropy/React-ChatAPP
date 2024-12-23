@@ -16,7 +16,6 @@ export const createMessage = async ({ content, roomId, userId }: CreateMessageRe
 			roomId,
 			userId,
 		});
-		console.log(messageRecord);
 		return Promise.resolve(messageRecord);
 	} catch (error) {
 		console.error("Error in createMessage");
@@ -45,7 +44,6 @@ export const findAllMessages = async ({ roomId }: MessagesControllerRequest) => 
 				generatedOn: "ASC",
 			},
 		});
-		console.log(messagesRecord);
 		return Promise.resolve(messagesRecord);
 	} catch (error) {
 		console.error("Error in findAllMessages");

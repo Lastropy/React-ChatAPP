@@ -44,8 +44,5 @@ io.on("connection", (socket: Socket) => {
 });
 
 AppDataSource.initialize()
-	.then(() => {
-		// here you can start to work with your database
-		console.log("Database Connectivity established!!");
-	})
+	.then(() => console.log("Database Connectivity established!!"))
 	.catch((error) => console.error(error));

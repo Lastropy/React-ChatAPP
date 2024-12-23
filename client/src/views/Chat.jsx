@@ -61,7 +61,6 @@ const Chat = ({ location }) => {
 		if (room) {
 			socket.on("updateRoomClients", (arg) => {
 				alert("Recieving message from other room clients...");
-				console.log(messages, arg);
 				setMessages(messages.concat(arg));
 			});
 		}
