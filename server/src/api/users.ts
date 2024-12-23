@@ -8,7 +8,7 @@ const userRequestSchema = Joi.object({
 		.min(1) // Minimum length of 1
 		.max(100) // Maximum length of 100
 		.required(),
-	email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+	email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "in"] } }),
 });
 
 const newUserJoins = async (data: any, callbackFunctionFromFrontEnd: any) => {
