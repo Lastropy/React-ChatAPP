@@ -31,7 +31,7 @@ const Chat = ({ location }) => {
 		if (socket) {
 			socket.emit("joinIfExists:room", { roomName, roomPwd, userUUID: userId }, (arg) => {
 				if (arg.error) {
-					Notification.error("Error while connecting to room.");
+					Notification.error("Incorrect Room Name or Password.");
 					console.error(arg.error);
 					navigate("/room");
 				} else {
