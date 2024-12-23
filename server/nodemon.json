@@ -1,15 +1,12 @@
 {
-  "watch": [
-    "src"
-  ],
-  "ext": "ts",
-  "ignore": [
-    "*.tests.ts",
-    "build",
-    "node_modules"
-  ],
-  "delay": "3",
-  "execMap": {
-    "ts": "ts-node"
-  }
+	"watch": ["src"],
+	"ext": "ts",
+	"ignore": ["*.tests.ts", "build", "node_modules"],
+	"delay": "3",
+	"execMap": {
+		"ts": "ts-node"
+	},
+	"events": {
+		"start": "cls"
+	}
 }
