@@ -1,6 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
+import "react-notifications-component/dist/theme.css";
+import { ReactNotifications } from "react-notifications-component";
 import { App } from "./App";
 
 const container = document.getElementById("root");
@@ -16,6 +18,7 @@ root.render(
 		}}
 		useRefreshTokens={true}
 	>
+		<ReactNotifications />
 		<App />
 	</Auth0Provider>
 );

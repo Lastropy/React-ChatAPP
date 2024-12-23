@@ -6,6 +6,7 @@ import Input from "../components/Input";
 import Messages from "./Messages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router";
+import Notification from "../components/Notification";
 
 const Chat = ({ location }) => {
 	const { user } = useAuth0();
@@ -30,11 +31,11 @@ const Chat = ({ location }) => {
 		if (socket) {
 			socket.emit("joinIfExists:room", { roomName, roomPwd, userUUID: userId }, (arg) => {
 				if (arg.error) {
-					alert("Error while connecting to room.");
+					Notification.error("Error while connecting to room.");
 					console.error(arg.error);
 					navigate("/room");
 				} else {
-					alert("Successfully connected to room.");
+					Notification.success("Successfully connected to room.");
 					setRoom(arg);
 				}
 			});
@@ -43,14 +44,14 @@ const Chat = ({ location }) => {
 
 	useEffect(() => {
 		if (room) {
-			alert(`Getting existing messages for ${room.name}`);
+			Notification.info(`Getting existing messages for ${room.name}`);
 			socket.emit("getForARoom:messages", { roomId: room.id }, (arg) => {
 				if (arg.error) {
-					alert("Error while fetching messages from room.");
+					Notification.error("Error while fetching messages from room.");
 					console.error(arg.error);
 					throw new Error("Error in fetching messages from room");
 				} else {
-					alert("Fetched Messages from room.");
+					Notification.success("Fetched Messages from room.");
 					setMessages(arg);
 				}
 			});
@@ -60,7 +61,6 @@ const Chat = ({ location }) => {
 	useEffect(() => {
 		if (room) {
 			socket.on("updateRoomClients", (arg) => {
-				alert("Recieving message from other room clients...");
 				setMessages(messages.concat(arg));
 			});
 		}
@@ -68,15 +68,15 @@ const Chat = ({ location }) => {
 
 	const handleSend = (event) => {
 		event.preventDefault();
-		if (!room) alert("Not connected to any room");
-		if (!message) alert("No message to send");
+		if (!room) Notification.error("Not connected to any room");
+		if (!message) Notification.error("No message to send");
 		if (message && room) {
 			socket.emit(
 				"create:message",
 				{ content: message, roomId: room.id, userId, userName: user.name },
 				(arg) => {
 					if (arg.error) {
-						alert("Error while creating a new message in the room.");
+						Notification.error("Error while creating a new message in the room.");
 						console.error(arg.error);
 						throw new Error("Error in creating a new message in the room");
 					} else {

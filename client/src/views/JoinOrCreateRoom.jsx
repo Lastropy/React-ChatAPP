@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import SelectDropdown from "../components/SelectDropdown";
+import Notification from "../components/Notification";
 
 const JoinOrCreateRoom = () => {
 	const [roomName, setRoomName] = useState("");
@@ -32,12 +33,12 @@ const JoinOrCreateRoom = () => {
 			const { name, email } = user;
 			socket.emit("createIfNotExists:user", { name, email }, (arg) => {
 				if (arg.error) {
-					alert("Error occured while upserting user");
+					Notification.error("Error occured while upserting user");
 					console.error(arg.error);
 					setUserUpserted(false);
 					setLoading(false);
 				} else {
-					alert("User successfully upserted");
+					Notification.success("User successfully upserted");
 					setUserUUID(arg.id);
 					setUserUpserted(true);
 					setLoading(false);
@@ -50,10 +51,10 @@ const JoinOrCreateRoom = () => {
 		if (createOrJoin === "create") {
 			socket.emit("get:rooms", (arg) => {
 				if (arg.error) {
-					alert("Error occured while fetching rooms");
+					Notification.error("Error occured while fetching rooms");
 					console.error(arg.error);
 				} else {
-					alert("Rooms successfully fetched");
+					Notification.info("Rooms successfully fetched");
 					for (let i = 0; i < arg.length; i += 1) {
 						arg[i].displayValue = `${arg[i].name} (Owner - ${arg[i].owner.name})`;
 					}
@@ -67,15 +68,15 @@ const JoinOrCreateRoom = () => {
 	const handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			if (!roomName || !roomPwd) return alert("Non-empty room name/password not acceptable.");
+			if (!roomName || !roomPwd) return Notification.error("Non-empty room name/password not acceptable.");
 			if (createOrJoin === "create") {
 				socket.emit("create:room", { roomName, roomPwd, userUUID }, (arg) => {
 					if (arg.error) {
-						alert("Error occured while creating room");
+						Notification.error("Error occured while creating room");
 						console.error(arg.error);
 						throw new Error("Error in creating room");
 					} else {
-						alert("Room successfully created");
+						Notification.success("Room successfully created");
 						navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}&userId=${userUUID}`);
 					}
 				});
