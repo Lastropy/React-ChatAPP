@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import SelectDropdown from "../components/SelectDropdown";
 
 const JoinOrCreateRoom = () => {
 	const [roomName, setRoomName] = useState("");
@@ -11,6 +12,7 @@ const JoinOrCreateRoom = () => {
 	const [userUUID, setUserUUID] = useState("");
 	const [isLoading, setLoading] = useState(false);
 	const [socket, setSocket] = useState(undefined);
+	const [roomsDropdown, setRoomsDropDown] = useState([]);
 	const navigate = useNavigate();
 	const { user, isAuthenticated } = useAuth0();
 
@@ -45,8 +47,21 @@ const JoinOrCreateRoom = () => {
 	}, [isAuthenticated, user, socket]);
 
 	const toggleCheckbox = () => {
-		if (createOrJoin === "create") setCreateOrJoin("join");
-		else setCreateOrJoin("create");
+		if (createOrJoin === "create") {
+			socket.emit("get:rooms", (arg) => {
+				if (arg.error) {
+					alert("Error occured while fetching rooms");
+					console.error(arg.error);
+				} else {
+					alert("Rooms successfully fetched");
+					for (let i = 0; i < arg.length; i += 1) {
+						arg[i].displayValue = `${arg[i].name} (Owner - ${arg[i].owner.name})`;
+					}
+					setRoomsDropDown(arg);
+					setCreateOrJoin("join");
+				}
+			});
+		} else setCreateOrJoin("create");
 	};
 
 	const handleSubmit = async (e) => {
@@ -61,10 +76,10 @@ const JoinOrCreateRoom = () => {
 						throw new Error("Error in creating room");
 					} else {
 						alert("Room successfully created");
-						navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}`);
+						navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}&userId=${userUUID}`);
 					}
 				});
-			} else navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}`);
+			} else navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}&userId=${userUUID}`);
 		} catch (error) {
 			console.error("Error in handleSubmit", error);
 		}
@@ -81,12 +96,21 @@ const JoinOrCreateRoom = () => {
 				{!isLoading && userUpserted ? (
 					<>
 						<div>
-							<input
-								placeholder="Room Name"
-								className="joinInput"
-								type="text"
-								onChange={(event) => setRoomName(event.target.value)}
-							/>
+							{createOrJoin === "create" ? (
+								<input
+									placeholder="Room Name"
+									className="joinInput"
+									type="text"
+									onChange={(event) => setRoomName(event.target.value)}
+								/>
+							) : (
+								<SelectDropdown
+									data={roomsDropdown}
+									valueField={"name"}
+									displayField={"displayValue"}
+									onChange={(event) => setRoomName(event.target.value)}
+								/>
+							)}
 						</div>
 						<div>
 							<input
