@@ -34,8 +34,13 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
 	socket.on("createIfNotExists:user", async (data, callback) => await api.users.newUserJoins(data, callback));
 	socket.on("create:room", async (data, callback) => await api.rooms.createANewRoom(data, callback));
-	// socket.on("sendMessage", (data, callback) => sendNewMessage(data, socket, io, callback));
-	// socket.on("disconnect", (reason) => handleDisconnection(reason, socket, io));
+	socket.on("get:rooms", async (callback) => await api.rooms.getAllRooms(callback));
+	socket.on("joinIfExists:room", async (data, callback) => await api.rooms.connectToRoom(data, callback, socket));
+	socket.on(
+		"getForARoom:messages",
+		async (data, callback) => await api.messages.getMessagesForARoom(data, callback)
+	);
+	socket.on("create:message", async (data, callback) => await api.messages.createANewMessage(data, callback, io));
 });
 
 AppDataSource.initialize()
