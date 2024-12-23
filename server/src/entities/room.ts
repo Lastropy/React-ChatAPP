@@ -8,8 +8,10 @@ import {
 	JoinTable,
 	JoinColumn,
 	Unique,
+	OneToMany,
 } from "typeorm";
 import { User } from "./user";
+import { Message } from "./message";
 
 @Entity()
 @Unique(["name"])
@@ -35,4 +37,7 @@ export class Room {
 
 	@ManyToMany(() => User, (user) => user.rooms)
 	members!: User[];
+
+	@OneToMany(() => Message, (msg) => msg.room)
+	messages!: Message[];
 }
