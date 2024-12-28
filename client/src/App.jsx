@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoadingAnimation from "./components/LoadingAnimation";
 import "./assets/css/index.css";
@@ -11,6 +11,7 @@ const Start = React.lazy(() => import("./views/Start"));
 const Header = React.lazy(() => import("./components/Header"));
 
 export const App = () => {
+	const [roomConnectInfo, setRoomConnectInfo] = useState(undefined);
 	return (
 		<Router>
 			<Header />
@@ -29,7 +30,10 @@ export const App = () => {
 					exact
 					element={
 						<React.Suspense fallback={<LoadingAnimation />}>
-							<ProtectedRoute component={JoinOrCreateRoom} />
+							<ProtectedRoute
+								component={JoinOrCreateRoom}
+								setRoomConnectInfo={setRoomConnectInfo}
+							/>
 						</React.Suspense>
 					}
 				/>
@@ -38,7 +42,7 @@ export const App = () => {
 					exact
 					element={
 						<React.Suspense fallback={<LoadingAnimation />}>
-							<ProtectedRoute component={Chat} location={location} />
+							<ProtectedRoute component={Chat} roomConnectInfo={roomConnectInfo} />
 						</React.Suspense>
 					}
 				/>

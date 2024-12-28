@@ -1,4 +1,3 @@
-import queryString from "query-string";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import InfoBar from "../components/InfoBar";
@@ -9,9 +8,9 @@ import { useNavigate } from "react-router";
 import Notification from "../components/Notification";
 import LoadingAnimation from "../components/LoadingAnimation";
 
-const Chat = ({ location }) => {
+const Chat = ({ roomConnectInfo }) => {
 	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-	const { roomName, roomPwd, userId } = queryString.parse(location.search);
+	const { roomName, roomPwd, userId } = roomConnectInfo;
 	const [accessToken, setAccessToken] = useState(undefined);
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState("");
@@ -68,7 +67,7 @@ const Chat = ({ location }) => {
 				}
 			});
 		}
-	}, [socket, accessToken, location.search]);
+	}, [socket, accessToken, roomConnectInfo]);
 
 	useEffect(() => {
 		if (room) {
@@ -82,7 +81,7 @@ const Chat = ({ location }) => {
 				} else {
 					Notification.success("Fetched Messages from room.");
 					setMessages(arg);
-					setLoading(true);
+					setLoading(false);
 				}
 			});
 		}

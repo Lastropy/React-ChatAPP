@@ -6,7 +6,7 @@ import SelectDropdown from "../components/SelectDropdown";
 import Notification from "../components/Notification";
 import LoadingAnimation from "../components/LoadingAnimation";
 
-const JoinOrCreateRoom = () => {
+const JoinOrCreateRoom = ({ setRoomConnectInfo }) => {
 	const [roomName, setRoomName] = useState("");
 	const [roomPwd, setRoomPwd] = useState("");
 	const [createOrJoin, setCreateOrJoin] = useState("create");
@@ -99,10 +99,22 @@ const JoinOrCreateRoom = () => {
 						throw new Error("Error in creating room");
 					} else {
 						Notification.success("Room successfully created");
-						navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}&userId=${userUUID}`);
+						setRoomConnectInfo({
+							roomName,
+							roomPwd,
+							userId: userUUID,
+						});
+						navigate(`/chat`);
 					}
 				});
-			} else navigate(`/chat?roomName=${roomName}&roomPwd=${roomPwd}&userId=${userUUID}`);
+			} else {
+				setRoomConnectInfo({
+					roomName,
+					roomPwd,
+					userId: userUUID,
+				});
+				navigate(`/chat`);
+			}
 		} catch (error) {
 			console.error("Error in handleSubmit", error);
 		}
