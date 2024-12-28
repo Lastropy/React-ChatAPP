@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import SelectDropdown from "../components/SelectDropdown";
 import Notification from "../components/Notification";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const JoinOrCreateRoom = () => {
 	const [roomName, setRoomName] = useState("");
@@ -15,10 +16,29 @@ const JoinOrCreateRoom = () => {
 	const [socket, setSocket] = useState(undefined);
 	const [roomsDropdown, setRoomsDropDown] = useState([]);
 	const navigate = useNavigate();
-	const { user, isAuthenticated } = useAuth0();
+	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const [accessToken, setAccessToken] = useState(undefined);
+	const fetchToken = async () => {
+		setAccessToken(await getAccessTokenSilently());
+	};
 
 	useEffect(() => {
-		setSocket(io(import.meta.env.VITE_SERVER_ENDPOINT));
+		if (isAuthenticated) {
+			fetchToken();
+		}
+	}, [isAuthenticated]);
+
+	useEffect(() => {
+		if (accessToken) {
+			setSocket(
+				io(import.meta.env.VITE_SERVER_ENDPOINT, {
+					auth: { token: accessToken },
+				})
+			);
+		}
+	}, [accessToken]);
+
+	useEffect(() => {
 		return () => {
 			if (socket) {
 				socket.off();
@@ -28,8 +48,12 @@ const JoinOrCreateRoom = () => {
 	}, []);
 
 	useEffect(() => {
-		if (isAuthenticated && socket) {
+		if (isAuthenticated && socket && accessToken) {
 			setLoading(true);
+			socket.on("connect_error", (err) => {
+				Notification.error(err.message);
+				setLoading(false);
+			});
 			const { name, email } = user;
 			socket.emit("createIfNotExists:user", { name, email }, (arg) => {
 				if (arg.error) {
@@ -45,7 +69,7 @@ const JoinOrCreateRoom = () => {
 				}
 			});
 		}
-	}, [isAuthenticated, user, socket]);
+	}, [isAuthenticated, user, socket, accessToken]);
 
 	const toggleCheckbox = () => {
 		if (createOrJoin === "create") {
@@ -90,7 +114,7 @@ const JoinOrCreateRoom = () => {
 		<div className="joinOuterContainer">
 			<div className="joinInnerContainer">
 				<h1 className="heading">
-					{isLoading && !userUpserted && "Loading..."}
+					{isLoading && !userUpserted && <LoadingAnimation />}
 					{!isLoading && !userUpserted && "User not upserted. Please refresh the page."}
 					{!isLoading && userUpserted && "Create / Join Room"}
 				</h1>

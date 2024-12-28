@@ -7,18 +7,40 @@ import Messages from "./Messages";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router";
 import Notification from "../components/Notification";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const Chat = ({ location }) => {
-	const { user } = useAuth0();
+	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const { roomName, roomPwd, userId } = queryString.parse(location.search);
+	const [accessToken, setAccessToken] = useState(undefined);
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState("");
 	const [socket, setSocket] = useState(undefined);
 	const [room, setRoom] = useState(undefined);
+	const [isLoading, setLoading] = useState(false);
 	const navigate = useNavigate();
 
+	const fetchToken = async () => {
+		setAccessToken(await getAccessTokenSilently());
+	};
+
 	useEffect(() => {
-		setSocket(io(import.meta.env.VITE_SERVER_ENDPOINT));
+		if (isAuthenticated) {
+			fetchToken();
+		}
+	}, [isAuthenticated]);
+
+	useEffect(() => {
+		if (accessToken) {
+			setSocket(
+				io(import.meta.env.VITE_SERVER_ENDPOINT, {
+					auth: { token: accessToken },
+				})
+			);
+		}
+	}, [accessToken]);
+
+	useEffect(() => {
 		return () => {
 			if (socket) {
 				socket.disconnect();
@@ -28,31 +50,41 @@ const Chat = ({ location }) => {
 	}, []);
 
 	useEffect(() => {
-		if (socket) {
+		if (socket && accessToken) {
+			setLoading(true);
+			socket.on("connect_error", (err) => {
+				Notification.error(err.message);
+				setLoading(false);
+			});
 			socket.emit("joinIfExists:room", { roomName, roomPwd, userUUID: userId }, (arg) => {
 				if (arg.error) {
 					Notification.error("Incorrect Room Name or Password.");
 					console.error(arg.error);
+					setLoading(false);
 					navigate("/room");
 				} else {
 					Notification.success("Successfully connected to room.");
 					setRoom(arg);
+					setLoading(false);
 				}
 			});
 		}
-	}, [socket, location.search]);
+	}, [socket, accessToken, location.search]);
 
 	useEffect(() => {
 		if (room) {
+			setLoading(true);
 			Notification.info(`Getting existing messages for ${room.name}`);
 			socket.emit("getForARoom:messages", { roomId: room.id }, (arg) => {
 				if (arg.error) {
 					Notification.error("Error while fetching messages from room.");
 					console.error(arg.error);
+					setLoading(false);
 					throw new Error("Error in fetching messages from room");
 				} else {
 					Notification.success("Fetched Messages from room.");
 					setMessages(arg);
+					setLoading(true);
 				}
 			});
 		}
@@ -92,8 +124,14 @@ const Chat = ({ location }) => {
 			{roomName && roomPwd && user ? (
 				<div className="container">
 					<InfoBar roomName={roomName} />
-					<Messages messages={messages} currentUserId={userId} />
-					<Input message={message} handleSend={handleSend} setMessage={setMessage} />
+					{isLoading ? (
+						<LoadingAnimation noBackground />
+					) : (
+						<>
+							<Messages messages={messages} currentUserId={userId} />
+							<Input message={message} handleSend={handleSend} setMessage={setMessage} />
+						</>
+					)}
 				</div>
 			) : (
 				<div style={{ color: "white" }}>No Name / Room provided</div>
