@@ -1,8 +1,8 @@
 import React from "react";
 
-const LoadingAnimation = () => {
+const LoadingAnimation = ({ noBackground = false }) => {
 	return (
-		<div className="loader-container">
+		<div className={"loader-container " + (!noBackground && "loader-background")}>
 			<div className="loader" />
 		</div>
 	);
