@@ -6,6 +6,7 @@ import express, { Request, Response, Router } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { AppDataSource } from "./data-source";
+import { authSocketMiddleware } from "./middleware/auth";
 
 const router = Router();
 const port = process.env.PORT;
@@ -30,6 +31,8 @@ const io = new Server(server, {
 		origin: "*",
 	},
 });
+
+io.use(authSocketMiddleware);
 
 io.on("connection", (socket: Socket) => {
 	socket.on("createIfNotExists:user", async (data, callback) => await api.users.newUserJoins(data, callback));
