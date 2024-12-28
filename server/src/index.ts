@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Socket } from "socket.io";
 import api from "./api";
 import cors from "cors";
@@ -7,8 +8,7 @@ import { Server } from "socket.io";
 import { AppDataSource } from "./data-source";
 
 const router = Router();
-const port = process.env.PORT || 5000;
-
+const port = process.env.PORT;
 const app = express();
 app.use(router);
 app.use(
@@ -17,7 +17,7 @@ app.use(
 	})
 );
 
-export const server = createServer(app);
+const server = createServer(app);
 server.listen(port);
 
 router.get("/", (req: Request, res: Response) => {
