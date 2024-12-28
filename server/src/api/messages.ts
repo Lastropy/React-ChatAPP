@@ -21,8 +21,8 @@ const createANewMessage = async (data: any, callbackFunctionFromFrontEnd: any, i
 		message["user"].name = userName;
 		callbackFunctionFromFrontEnd(message);
 		io.to(message.roomId).emit("updateRoomClients", message);
-	} catch (error) {
-		console.error("Error in createANewMessage", error);
+	} catch (error: any) {
+		console.error("Error in createANewMessage: ", error.message);
 		return callbackFunctionFromFrontEnd({ error });
 	}
 };
@@ -32,8 +32,8 @@ const getMessagesForARoom = async (data: any, callbackFunctionFromFrontEnd: any)
 		const messageData = await messageRequestFindSchema.validateAsync(data);
 		const messages = await controllers.MessagesController.findAllMessages(messageData);
 		callbackFunctionFromFrontEnd(messages);
-	} catch (error) {
-		console.error("Error in findMessage", error);
+	} catch (error: any) {
+		console.error("Error in findMessage: ", error.message);
 		return callbackFunctionFromFrontEnd({ error });
 	}
 };

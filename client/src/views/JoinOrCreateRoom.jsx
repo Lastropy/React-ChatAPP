@@ -51,6 +51,7 @@ const JoinOrCreateRoom = () => {
 		if (isAuthenticated && socket && accessToken) {
 			setLoading(true);
 			socket.on("connect_error", (err) => {
+				console.log(err);
 				Notification.error(err.message);
 				setLoading(false);
 			});
@@ -58,7 +59,6 @@ const JoinOrCreateRoom = () => {
 			socket.emit("createIfNotExists:user", { name, email }, (arg) => {
 				if (arg.error) {
 					Notification.error("Error occured while upserting user");
-					console.error(arg.error);
 					setUserUpserted(false);
 					setLoading(false);
 				} else {
@@ -76,7 +76,6 @@ const JoinOrCreateRoom = () => {
 			socket.emit("get:rooms", (arg) => {
 				if (arg.error) {
 					Notification.error("Error occured while fetching rooms");
-					console.error(arg.error);
 				} else {
 					Notification.info("Rooms successfully fetched");
 					for (let i = 0; i < arg.length; i += 1) {
@@ -97,7 +96,6 @@ const JoinOrCreateRoom = () => {
 				socket.emit("create:room", { roomName, roomPwd, userUUID }, (arg) => {
 					if (arg.error) {
 						Notification.error("Error occured while creating room");
-						console.error(arg.error);
 						throw new Error("Error in creating room");
 					} else {
 						Notification.success("Room successfully created");

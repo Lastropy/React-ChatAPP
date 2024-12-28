@@ -16,8 +16,8 @@ const newUserJoins = async (data: any, callbackFunctionFromFrontEnd: any) => {
 		const userData = await userRequestSchema.validateAsync(data);
 		const user = await controllers.UsersController.createIfNotExists(userData);
 		callbackFunctionFromFrontEnd(user);
-	} catch (error) {
-		console.error("Error in newUserJoins", error);
+	} catch (error: any) {
+		console.error("Error in newUserJoins: ", error.message);
 		return callbackFunctionFromFrontEnd({ error });
 	}
 };

@@ -59,7 +59,6 @@ const Chat = ({ location }) => {
 			socket.emit("joinIfExists:room", { roomName, roomPwd, userUUID: userId }, (arg) => {
 				if (arg.error) {
 					Notification.error("Incorrect Room Name or Password.");
-					console.error(arg.error);
 					setLoading(false);
 					navigate("/room");
 				} else {
@@ -78,7 +77,6 @@ const Chat = ({ location }) => {
 			socket.emit("getForARoom:messages", { roomId: room.id }, (arg) => {
 				if (arg.error) {
 					Notification.error("Error while fetching messages from room.");
-					console.error(arg.error);
 					setLoading(false);
 					throw new Error("Error in fetching messages from room");
 				} else {
@@ -109,7 +107,6 @@ const Chat = ({ location }) => {
 				(arg) => {
 					if (arg.error) {
 						Notification.error("Error while creating a new message in the room.");
-						console.error(arg.error);
 						throw new Error("Error in creating a new message in the room");
 					} else {
 						setMessage("");

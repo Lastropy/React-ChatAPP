@@ -11,8 +11,8 @@ const getSigningKey = async (kid: string): Promise<string> => {
 		const signingKey = key?.getPublicKey() || "";
 		return signingKey;
 	} catch (error) {
-		console.error(error);
-		throw new Error("Error getting signing key.");
+		console.error("Error getting signing key.");
+		throw error;
 	}
 };
 
@@ -35,8 +35,8 @@ export const authSocketMiddleware = async (socket: Socket, next: any) => {
 		});
 		socket.data.user = decodedToken;
 		next();
-	} catch (error) {
-		console.error(error);
+	} catch (error: any) {
+		console.error("Error in Authorization Middleware: " + error.message);
 		return next(new Error("Not Authorized"));
 	}
 };
