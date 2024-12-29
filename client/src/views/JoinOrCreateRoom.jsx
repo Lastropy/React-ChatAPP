@@ -51,7 +51,6 @@ const JoinOrCreateRoom = ({ setRoomConnectInfo }) => {
 		if (isAuthenticated && socket && accessToken) {
 			setLoading(true);
 			socket.on("connect_error", (err) => {
-				console.log(err);
 				Notification.error(err.message);
 				setLoading(false);
 			});
