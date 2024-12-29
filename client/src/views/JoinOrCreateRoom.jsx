@@ -68,11 +68,7 @@ const JoinOrCreateRoom = ({ setRoomConnectInfo }) => {
 					setLoading(false);
 				}
 			});
-		}
-	}, [isAuthenticated, user, socket, accessToken]);
 
-	const toggleCheckbox = () => {
-		if (createOrJoin === "create") {
 			socket.emit("get:rooms", (arg) => {
 				if (arg.error) {
 					Notification.error("Error occured while fetching rooms");
@@ -82,11 +78,25 @@ const JoinOrCreateRoom = ({ setRoomConnectInfo }) => {
 						arg[i].displayValue = `${arg[i].name} (Owner - ${arg[i].owner.name})`;
 					}
 					setRoomsDropDown(arg);
-					setCreateOrJoin("join");
 				}
 			});
-		} else setCreateOrJoin("create");
+		}
+	}, [isAuthenticated, user, socket, accessToken]);
+
+	const toggleCheckbox = () => {
+		if (createOrJoin === "create") setCreateOrJoin("join");
+		else setCreateOrJoin("create");
 	};
+
+	useEffect(() => {
+		if (socket) {
+			socket.on("updateRoomsDropdowns", (arg) => {
+				arg.displayValue = `${arg.name} (Owner - ${arg.owner.name})`;
+				setRoomsDropDown([...roomsDropdown, arg]);
+				Notification.info("Rooms updated");
+			});
+		}
+	}, [socket, roomsDropdown]);
 
 	const handleSubmit = async (e) => {
 		try {

@@ -29,11 +29,12 @@ const roomRequestFindIfExistsSchema = Joi.object({
 		.required(),
 });
 
-const createANewRoom = async (data: any, callbackFunctionFromFrontEnd: any) => {
+const createANewRoom = async (data: any, callbackFunctionFromFrontEnd: any, socket: Socket) => {
 	try {
 		const roomData = await roomRequestCreateSchema.validateAsync(data);
 		const room = await controllers.RoomsController.createRoom(roomData);
 		callbackFunctionFromFrontEnd(room);
+		socket.broadcast.emit("updateRoomsDropdowns", room);
 	} catch (error: any) {
 		console.error("Error in createANewRoom: ", error.message);
 		return callbackFunctionFromFrontEnd({ error });

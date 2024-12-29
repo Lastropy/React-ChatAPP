@@ -8,12 +8,20 @@ interface RoomsControllerRequest {
 export const createRoom = async ({ roomName, roomPwd, userUUID }: RoomsControllerRequest) => {
 	try {
 		console.log("Inside createRoom");
+		const userRecord = await BasicRepositoryOperations.findOne("User", { id: userUUID });
 		const roomRecord = await BasicRepositoryOperations.create("Room", {
 			name: roomName,
 			password: roomPwd,
-			ownerId: userUUID,
+			ownerId: userRecord?.id,
 		});
-		return Promise.resolve(roomRecord);
+		return Promise.resolve({
+			id: roomRecord.id,
+			name: roomRecord.name,
+			ownerId: roomRecord.ownerId,
+			owner: {
+				name: userRecord?.name,
+			},
+		});
 	} catch (error) {
 		console.error("Error in createRoom");
 		return Promise.reject(error);

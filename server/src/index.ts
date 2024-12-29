@@ -36,7 +36,7 @@ io.use(authSocketMiddleware);
 
 io.on("connection", (socket: Socket) => {
 	socket.on("createIfNotExists:user", async (data, callback) => await api.users.newUserJoins(data, callback));
-	socket.on("create:room", async (data, callback) => await api.rooms.createANewRoom(data, callback));
+	socket.on("create:room", async (data, callback) => await api.rooms.createANewRoom(data, callback, socket));
 	socket.on("get:rooms", async (callback) => await api.rooms.getAllRooms(callback));
 	socket.on("joinIfExists:room", async (data, callback) => await api.rooms.connectToRoom(data, callback, socket));
 	socket.on(
