@@ -52,7 +52,7 @@ const Chat = ({ roomConnectInfo }) => {
 		if (socket && accessToken) {
 			setLoading(true);
 			socket.on("connect_error", (err) => {
-				Notification.error(err.message);
+				Notification.error(err.message, 2000);
 				setLoading(false);
 			});
 			socket.emit("joinIfExists:room", { roomName, roomPwd, userUUID: userId }, (arg) => {
