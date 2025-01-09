@@ -1,61 +1,62 @@
-# Chat Room Simulator
+# Secure Group Chat Application
 
-**_A Discord style Full Stack Web App, to simulate a live chat room, with server-side reload, using WebSockets._**
+**_Developed a real-time group chat application utilizing Socket.IO with Node.js to facilitate seamless communication between web clients and servers, using WebSockets._**
 
 Made with 💕 using :
 
 - React.js
 - Node.js
-- Socket.io
-- HTML - CSS
-- Javascript
+- Socket.IO
+- PostGRESQL
+- TypeORM
+- TypeScript (Backend) & JavaScript (Frontend)
 
 ## Key Features
 
-a) _Support for in-text emojis_.
+a) It enables live room creation and joining with password-protected access, allowing users to compose messages and have them pushed promptly to all participants.
 
-> Type _:) and get😀_
+b) Implemented secure multi-user authentication using Auth0, with JWT-based API protection to ensure robust access control.
 
-b) _Lazy Loading Implemented, for optimized rendering of component trees._
-
-c) _Loader Animation implemented._
+c) Integrated PostgreSQL with TypeORM for managing user, room, and message data, including message persistence to allow users to view chat history upon re-entry
 
 ## How To Start
 
 a) _Go to server folder in the terminal and run:_
 
-> $ npm run start
+> npm i && npm run dev
+
+This will start the server at port 5000 (default; can be edited in .env file)
 
 b) _Go to client folder in the terminal and run:_
 
-> $ npm run start
+> npm i && npm run dev
 
-c) The backend server will run on port 5000.
+This will start the server at port 5173 (default; can be edited in .env file)
 
-> URL : http://localhost:5000
+c) Make sure to have PostGRESQL installed, with the configuration specified in .env file (can be modified.)
 
-d) The frontend server will run on port 5173.
+## Application Flow and Working
 
-> URL : http://localhost:5173
+a) A user will have to login using his email or google credentials, on the Auth0 OAuth Server.
 
-## Activities
+b) Upon successful login, their user record will be created (if not existing) in PostgreSQL using TypeORM and backend Socket.IO server.
 
-a) At the beginning, you'll see a username and room login page.
+c) Then they can either create a room or join an existing room.
 
-b) You can enter a username and a room name.
+d) Both the options will require them to enter a password.
 
-c) If you enter a new username, it will be created.
+e) When joining a room, a dropdown is there displaying existing rooms, which gets updated live using Socket.IO.
 
-d) If a new room name is entered, it will be created.
+f) If room is being created, record of it will be created in PostgreSQL room entity.
 
-e) If a new user enters a room, a greeting message is displayed to the new user.
+g) Once they provide the room name and password ( either create or join existing) , they will be sent to a chat window, where if the room name and password is not correct, they will be sent back to the join or create room page.
 
-f) If a new user enters a room, the other existing room users will be notified.
+h) If password and room name is correct, the currently logged in user subscribes to the room and can send and receive messages live from other users subscribed to the same room using a backend socketio server.
 
-g) The message you send in the room, will be visible to all participants of that room.
+i) If a new message is created, it is also persisted in the PostGRESQL, so that next time somebody comes to the room, they can see existing messages.
 
-h) Upon exiting the room, the other room users will be notified.
+j) Automatic reconnection is acheived using Socket.IO.
 
-i) Upon exiting the room, you'll be taken back to username and room login page.
+k) All frontend routes are protected using a Protected route component and Auth0 wrapper.
 
-![1734263457270](image/README/1734263457270.png)
+l) Backend is protected as access token will be required to do any kind of CRUD operation.
